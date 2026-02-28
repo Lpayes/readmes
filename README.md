@@ -1,10 +1,10 @@
-### 🛠️ Manual de Compilación e Instalación
+## 🛠️ Manual de Compilación e Instalación
 
 Este documento describe el procedimiento técnico para compilar, instalar y ejecutar correctamente el proyecto en entorno Windows utilizando CMD.
 
 ---
 
-### 1. Librería de Estructura de Datos (`umg.edu.gt.data-structure.queue`)
+## 1. Librería de Estructura de Datos (`umg.edu.gt.data-structure.queue`)
 
 Esta librería contiene la implementación personalizada de la estructura de datos tipo cola.
 
@@ -21,12 +21,17 @@ mvn clean install
 ```
 
 **Nota Importante:**  
-Este comando genera el archivo `.jar` dentro del repositorio local del usuario (`C:\Users\TU_USUARIO\.m2`).  
+Este comando genera el archivo `.jar` dentro del repositorio local
+
+```
+C:\Users\MI_USUARIO\.m2
+```
+
 Sin este paso, el proyecto `queueHandler` no podrá reconocer la dependencia.
 
 ---
 
-### 2. Proyecto Aplicación (`queueHandler`)
+## 2. Proyecto Aplicación (`queueHandler`)
 
 Este módulo consume la librería instalada previamente y ejecuta la lógica principal del sistema.
 
@@ -39,12 +44,11 @@ mvn clean package
 Durante este proceso:
 
 - Se compila todo el proyecto.
-- Se ejecuta el plugin **ProGuard**.
-- Se genera el archivo empaquetado y ofuscado.
+- Se genera el archivo `.jar` ejecutable.
 
 ---
 
-### Ejecutar desde CMD
+## Ejecutar desde CMD
 
 ```cmd
 mvn exec:java -Dexec.mainClass="queueHandler.handler.App"
@@ -54,19 +58,20 @@ Este comando inicia la aplicación principal desde la consola de Windows.
 
 ---
 
-### 🧠 Explicación del Diseño y Decisiones Técnicas
+## 🧠 Explicación del Diseño y Decisiones Técnicas
 
 El sistema fue diseñado bajo los siguientes principios:
 
-- Arquitectura Modular  
-- Principio de Responsabilidad Única (SRP)  
-- Separación entre estructura de datos y lógica de negocio  
+- Arquitectura modular.
+- Principio de Responsabilidad Única (SRP).
+- Separación entre estructura de datos y lógica de negocio.
 
-El objetivo es garantizar mantenibilidad, claridad estructural y protección de la lógica crítica.
+La librería contiene únicamente la implementación de la cola enlazada manual.  
+El módulo `queueHandler` contiene la lógica de reproducción y prioridad.
 
 ---
 
-### Implementación de la Estructura de Datos
+## Implementación de la Estructura de Datos
 
 Se desarrolló una implementación manual:
 
@@ -86,50 +91,43 @@ No se utilizaron estructuras del JDK para cumplir con el requerimiento académic
 
 ---
 
-### Encapsulamiento
+## 🔥 Sistema de Prioridad
 
-- Los nodos internos no son accesibles desde el exterior.
-- Toda interacción se realiza mediante métodos públicos controlados.
-- Se garantiza integridad estructural.
+Para gestionar la prioridad sin utilizar estructuras del JDK, se implementaron **dos colas internas** dentro de `PlaylistManager`:
 
----
+```java
+private QueueLinked<Song> highPriority;
+private QueueLinked<Song> normalPriority;
+```
 
-### Ofuscación con ProGuard
+### Asignación de Prioridad
 
-Se integró ProGuard dentro del ciclo de vida de Maven para:
+- Si `priority == 1` → La canción se encola en `highPriority`.
+- Si `priority == 2` → La canción se encola en `normalPriority`.
 
-- Proteger la lógica del `PlaylistManager`.
-- Evitar ingeniería inversa.
-- Mantener visibles únicamente los puntos de entrada necesarios.
+La decisión se realiza en el método:
 
----
-
-### 🔥 Sistema de Prioridad (Parte C)
-
-Para gestionar la prioridad sin estructuras del JDK, se implementaron dos colas internas:
-
-### Cola VIP (`highPriority`)
-
-- Almacena canciones con `priority = 1`.
-
-### Cola Normal (`normalPriority`)
-
-- Almacena canciones con `priority = 2`.
-
----
+```java
+public void addSong(Song song) {
+    if (song.getPriority() == 1) {
+        highPriority.enqueue(song);
+    } else {
+        normalPriority.enqueue(song);
+    }
+}
+```
 
 ### Lógica de Reproducción
 
-1. Se verifica primero la cola VIP.
-2. Mientras tenga elementos, se reproducen en orden FIFO.
-3. Solo cuando esté vacía se procesa la cola normal.
-4. Se respeta el orden de llegada dentro de cada categoría.
+1. Se procesa completamente la cola de alta prioridad.
+2. Cuando está vacía, se procesa la cola normal.
+3. Dentro de cada cola se respeta el orden FIFO.
 
-Esto garantiza prioridad estricta sin alterar la lógica FIFO.
+Esto garantiza prioridad estricta sin alterar el comportamiento natural de la estructura de datos.
 
 ---
 
-### ⏱️ Simulación de Duración (Parte D)
+## ⏱️ Simulación de Duración
 
 La reproducción simula tiempo real utilizando:
 
@@ -141,65 +139,10 @@ Esto produce:
 
 - Pausa de 1 segundo por iteración.
 - Visualización del progreso segundo a segundo.
-- Validación clara del flujo de ejecución.
-
-Ejemplo de salida:
-
-```
-Reproduciendo: Canción X
-1s / 12s
-2s / 12s
-...
-```
+- Ejecución secuencial visible en consola.
 
 ---
 
-### Extensiones Implementadas
-
-### Barra de Progreso Visual
-
-Método utilizado:
-
-```java
-drawBar()
-```
-
-Representación en consola:
-
-```
-[#####-----]
-```
-
----
-
-### Contador Total de Canciones
-
-Al finalizar la ejecución se muestra:
-
-- Total de canciones reproducidas.
-- Resumen general de la sesión.
-
----
-
-### 📸 Evidencias de Funcionamiento
-
-Ubicación:  
-
-```
-/evidencias
-```
-
-Incluye:
-
-- Captura del `.jar` en `.m2`.
-- Evidencia de `mvn clean package`.
-- Logs de simulación.
-- Validación de prioridad VIP sobre normal.
-
----
-
-### 👤 Autor
-
-**Lester**  
-**Carnet:** [TU_CARNET]  
-**Universidad:** UMG – Ingeniería en Sistemas
+## 👤 Autor
+Lester David Payes Méndez, carnet: 0509-24-22750
+UMG – Ingeniería en Sistemas
