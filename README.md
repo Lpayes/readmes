@@ -1,4 +1,4 @@
-## 🛠️ Manual de Compilación e Instalación
+##  Manual de Compilación e Instalación
 
 Este documento describe el procedimiento técnico para compilar, instalar y ejecutar correctamente el proyecto en entorno Windows utilizando CMD.
 
