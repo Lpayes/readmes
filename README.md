@@ -58,7 +58,7 @@ Este comando inicia la aplicación principal desde la consola de Windows.
 
 ---
 
-## 🧠 Explicación del Diseño y Decisiones Técnicas
+##  Explicación del Diseño y Decisiones Técnicas
 
 El sistema fue diseñado bajo los siguientes principios:
 
@@ -91,7 +91,7 @@ No se utilizaron estructuras del JDK para cumplir con el requerimiento académic
 
 ---
 
-## 🔥 Sistema de Prioridad
+##  Sistema de Prioridad
 
 Para gestionar la prioridad sin utilizar estructuras del JDK, se implementaron **dos colas internas** dentro de `PlaylistManager`:
 
@@ -126,10 +126,10 @@ public void addSong(Song song) {
 Esto garantiza prioridad estricta sin alterar el comportamiento natural de la estructura de datos.
 
 ---
-## 🎵 Contador Total de Canciones Reproducidas
+##  Contador Total de Canciones Reproducidas
 
 Se implementó un contador interno dentro de `PlaylistManager` para llevar el control de cuántas canciones fueron reproducidas durante la ejecución.
-## ⏱️ Simulación de Duración
+##  Simulación de Duración
 
 La reproducción simula tiempo real utilizando:
 
@@ -145,6 +145,6 @@ Esto produce:
 
 ---
 
-## 👤 Autor
+##  Estudiante
 Lester David Payes Méndez, carnet: 0509-24-22750
 UMG – Ingeniería en Sistemas
