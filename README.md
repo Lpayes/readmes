@@ -126,7 +126,9 @@ public void addSong(Song song) {
 Esto garantiza prioridad estricta sin alterar el comportamiento natural de la estructura de datos.
 
 ---
+## 🎵 Contador Total de Canciones Reproducidas
 
+Se implementó un contador interno dentro de `PlaylistManager` para llevar el control de cuántas canciones fueron reproducidas durante la ejecución.
 ## ⏱️ Simulación de Duración
 
 La reproducción simula tiempo real utilizando:
