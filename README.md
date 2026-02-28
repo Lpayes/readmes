@@ -1,171 +1,205 @@
-1️⃣ Librería de Estructura de Datos
-umg.edu.gt.data-structure.queue
-📌 Compilar la librería
+### 🛠️ Manual de Compilación e Instalación
+
+Este documento describe el procedimiento técnico para compilar, instalar y ejecutar correctamente el proyecto en entorno Windows utilizando CMD.
+
+---
+
+### 1. Librería de Estructura de Datos (`umg.edu.gt.data-structure.queue`)
+
+Esta librería contiene la implementación personalizada de la estructura de datos tipo cola.
+
+### Compilar la librería
+
+```cmd
 mvn clean compile
-📌 Instalar en el repositorio local (.m2)
+```
+
+### Instalar en el repositorio local (.m2)
+
+```cmd
 mvn clean install
+```
 
-⚠️ Nota crítica:
-Este paso es indispensable para generar el archivo .jar dentro del repositorio local (.m2) del usuario.
-Sin esta instalación, el proyecto queueHandler no podrá reconocer la dependencia.
+**Nota Importante:**  
+Este comando genera el archivo `.jar` dentro del repositorio local del usuario (`C:\Users\TU_USUARIO\.m2`).  
+Sin este paso, el proyecto `queueHandler` no podrá reconocer la dependencia.
 
-2️⃣ Proyecto Aplicación
-queueHandler
-📌 Compilar y empaquetar
+---
+
+### 2. Proyecto Aplicación (`queueHandler`)
+
+Este módulo consume la librería instalada previamente y ejecuta la lógica principal del sistema.
+
+### Compilar y Empaquetar
+
+```cmd
 mvn clean package
+```
 
-🔎 Nota técnica:
-Este proceso ejecuta la compilación completa y activa el plugin ProGuard, encargado de ofuscar el código.
+Durante este proceso:
 
-📌 Ejecutar desde consola
+- Se compila todo el proyecto.
+- Se ejecuta el plugin **ProGuard**.
+- Se genera el archivo empaquetado y ofuscado.
+
+---
+
+### Ejecutar desde CMD
+
+```cmd
 mvn exec:java -Dexec.mainClass="queueHandler.handler.App"
-🧠 Explicación del Diseño y Decisiones Técnicas
+```
 
-El diseño del sistema se fundamenta en:
+Este comando inicia la aplicación principal desde la consola de Windows.
 
-Arquitectura Modular
+---
 
-Principio de Responsabilidad Única (SRP)
+### 🧠 Explicación del Diseño y Decisiones Técnicas
 
-El objetivo fue garantizar separación de responsabilidades, mantenibilidad y protección de la lógica crítica.
+El sistema fue diseñado bajo los siguientes principios:
 
-📦 Estructura de Datos Manual
+- Arquitectura Modular  
+- Principio de Responsabilidad Única (SRP)  
+- Separación entre estructura de datos y lógica de negocio  
 
-Se implementó una clase genérica:
+El objetivo es garantizar mantenibilidad, claridad estructural y protección de la lógica crítica.
 
+---
+
+### Implementación de la Estructura de Datos
+
+Se desarrolló una implementación manual:
+
+```java
 QueueLinked<T>
-Características clave:
+```
 
-Implementación basada en nodos enlazados
+Características técnicas:
 
-Uso de referencias privadas:
+- Basada en nodos enlazados.
+- Referencias privadas `head` y `tail`.
+- Inserción en O(1).
+- Extracción en O(1).
+- Encapsulamiento completo de nodos internos.
 
-head
+No se utilizaron estructuras del JDK para cumplir con el requerimiento académico.
 
-tail
+---
 
-Complejidad temporal:
+### Encapsulamiento
 
-enqueue() → O(1)
+- Los nodos internos no son accesibles desde el exterior.
+- Toda interacción se realiza mediante métodos públicos controlados.
+- Se garantiza integridad estructural.
 
-dequeue() → O(1)
+---
 
-Esto asegura eficiencia constante en inserciones y extracciones.
-
-🔐 Encapsulamiento
-
-Los nodos internos no se exponen
-
-Toda interacción se realiza mediante métodos públicos genéricos
-
-Se protege la integridad estructural de la cola
-
-🛡️ Ofuscación
+### Ofuscación con ProGuard
 
 Se integró ProGuard dentro del ciclo de vida de Maven para:
 
-Proteger la lógica de prioridad del PlaylistManager
+- Proteger la lógica del `PlaylistManager`.
+- Evitar ingeniería inversa.
+- Mantener visibles únicamente los puntos de entrada necesarios.
 
-Mantener visibles únicamente los puntos de entrada obligatorios
+---
 
-Dificultar ingeniería inversa
+### 🔥 Sistema de Prioridad (Parte C)
 
-En términos estratégicos: propiedad intelectual blindada.
+Para gestionar la prioridad sin estructuras del JDK, se implementaron dos colas internas:
 
-🔥 Sistema de Prioridad (Parte C)
+### Cola VIP (`highPriority`)
 
-Para cumplir con el requerimiento de no utilizar estructuras del JDK, se diseñó una solución basada en dos colas internas dentro del PlaylistManager.
+- Almacena canciones con `priority = 1`.
 
-🎵 Estructura Interna
+### Cola Normal (`normalPriority`)
 
-highPriority → Canciones con priority = 1
+- Almacena canciones con `priority = 2`.
 
-normalPriority → Canciones con priority = 2
+---
 
-⚙️ Lógica de Reproducción
+### Lógica de Reproducción
 
-El sistema verifica primero la cola VIP.
+1. Se verifica primero la cola VIP.
+2. Mientras tenga elementos, se reproducen en orden FIFO.
+3. Solo cuando esté vacía se procesa la cola normal.
+4. Se respeta el orden de llegada dentro de cada categoría.
 
-Mientras existan elementos en highPriority, se reproducen exclusivamente estos.
+Esto garantiza prioridad estricta sin alterar la lógica FIFO.
 
-Solo cuando esté vacía, comienza la reproducción de normalPriority.
+---
 
-Dentro de cada categoría se respeta el orden FIFO.
+### ⏱️ Simulación de Duración (Parte D)
 
-Resultado: prioridad garantizada sin romper el orden natural.
+La reproducción simula tiempo real utilizando:
 
-⏱️ Simulación de Duración y Complejidad (Parte D)
-🎬 Simulación Realista
-
-La reproducción no es instantánea; se implementó un flujo que simula tiempo real:
-
+```java
 Thread.sleep(1000);
-Funcionalidad:
+```
 
-Detiene la ejecución 1 segundo por ciclo
+Esto produce:
 
-Muestra progreso segundo a segundo
+- Pausa de 1 segundo por iteración.
+- Visualización del progreso segundo a segundo.
+- Validación clara del flujo de ejecución.
 
-Ejemplo de log:
+Ejemplo de salida:
 
+```
+Reproduciendo: Canción X
 1s / 12s
 2s / 12s
 ...
+```
 
-Esto permite validar visualmente el comportamiento del sistema.
+---
 
-🚀 Extensiones de Complejidad Implementadas
-📊 Barra de Progreso Visual
+### Extensiones Implementadas
 
-Se desarrolló el método:
+### Barra de Progreso Visual
 
+Método utilizado:
+
+```java
 drawBar()
+```
 
-Ejemplo visual:
+Representación en consola:
 
+```
 [#####-----]
+```
 
-Proporciona retroalimentación gráfica en consola.
+---
 
-📈 Contador Total
+### Contador Total de Canciones
 
 Al finalizar la ejecución se muestra:
 
-Total de canciones reproducidas durante la sesión
+- Total de canciones reproducidas.
+- Resumen general de la sesión.
 
-Log final de resumen operativo
+---
 
-Indicador clave de ejecución exitosa.
+### 📸 Evidencias de Funcionamiento
 
-📸 Evidencias de Funcionamiento
+Ubicación:  
 
-Ubicadas en la carpeta:
-
+```
 /evidencias
-✔️ Librería instalada en .m2
+```
 
-Captura del archivo .jar generado correctamente.
+Incluye:
 
-✔️ Compilación del Handler
+- Captura del `.jar` en `.m2`.
+- Evidencia de `mvn clean package`.
+- Logs de simulación.
+- Validación de prioridad VIP sobre normal.
 
-Evidencia de ejecución de:
+---
 
-mvn package
-✔️ Logs de Simulación
+### 👤 Autor
 
-Capturas mostrando:
-
-Reproducción segundo a segundo
-
-Barra de progreso activa
-
-✔️ Prioridad Musical
-
-Evidencia de que las canciones VIP se procesan antes que las normales.
-
-👤 Autor
-
-Lester
-
-Carnet: [TU_CARNET]
-Universidad: UMG – Ingeniería en Sistemas
+**Lester**  
+**Carnet:** [TU_CARNET]  
+**Universidad:** UMG – Ingeniería en Sistemas
